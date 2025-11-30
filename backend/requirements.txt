@@ -1,0 +1,12 @@
+flask
+gunicorn
+flask-sqlalchemy
+flask-jwt-extended
+python-dotenv
+passlib
+flask-cors
+psycopg2-binary
+openai
+python-dateutil
+pytz
+pandas

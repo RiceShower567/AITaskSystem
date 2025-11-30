@@ -1,0 +1,64 @@
+version: '3.8'
+
+services:
+  # 后端服务
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ai_task_system_backend
+    restart: always
+    environment:
+      - FLASK_ENV=production
+      - DATABASE_URL=postgresql://admin:password@db:5432/example_db
+      - SECRET_KEY=your-secret-key-here
+      - JWT_SECRET_KEY=your-jwt-secret-key-here
+      - JWT_ACCESS_TOKEN_EXPIRES=3600
+      - OPENAI_API_KEY=your-openai-api-key-here
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/app
+    networks:
+      - app-network
+
+  # 数据库服务
+  db:
+    image: postgres:13-alpine
+    container_name: ai_task_system_db
+    restart: always
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=example_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # 前端服务
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: ai_task_system_frontend
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - app-network
+    # 如果需要在开发环境中使用，可以取消下面的挂载
+    # volumes:
+    #   - ./frontend:/app
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
