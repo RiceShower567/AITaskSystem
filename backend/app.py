@@ -4,7 +4,7 @@ from flask_jwt_extended import JWTManager
 from flask_cors import CORS
 import os
 from dotenv import load_dotenv
-from backend.utils.auth import jwt_error_handler
+from utils.auth import jwt_error_handler
 
 # 加载环境变量
 load_dotenv()
@@ -39,8 +39,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 # 导入路由
-from backend.routes import auth, tasks
-from backend.routes import ai_scheduler
+from routes import auth, tasks
+from routes import ai_scheduler
 
 # 注册蓝图
 app.register_blueprint(auth.bp, url_prefix='/api/auth')
